@@ -41,9 +41,22 @@ namespace BookstoreApplication.Repositories
         // UPDATE
         public async Task<Book> UpdateBookAsync(Book book)
         {
-            _context.Update(book);
+            var existingBook = await _context.Books.FindAsync(book.Id);
+            if (existingBook == null)
+            {
+                throw new ArgumentException($"Book with ID {book.Id} not found.");
+            }
+
+            // Update only the properties that should be updated
+            existingBook.Title = book.Title;
+            existingBook.PageCount = book.PageCount;
+            existingBook.PublishedDate = book.PublishedDate;
+            existingBook.ISBN = book.ISBN;
+            existingBook.AuthorId = book.AuthorId;
+            existingBook.PublisherId = book.PublisherId;
+
             await _context.SaveChangesAsync();
-            return book;
+            return existingBook;
         }
 
         // DELETE

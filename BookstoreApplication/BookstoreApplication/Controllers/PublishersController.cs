@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BookstoreApplication.Models;
-using BookstoreApplication.Repositories;
+using BookstoreApplication.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreApplication.Controllers
@@ -9,18 +9,18 @@ namespace BookstoreApplication.Controllers
     [ApiController]
     public class PublishersController : ControllerBase
     {
-        private readonly PublisherRepository _publisherRepository;
+        private readonly PublisherService _publisherService;
 
-        public PublishersController(PublisherRepository publisherRepository)
+        public PublishersController(PublisherService publisherService)
         {
-            _publisherRepository = publisherRepository;
+            _publisherService = publisherService;
         }
 
         // GET: api/publishers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var publishers = await _publisherRepository.GetAllPublishersAsync();
+            var publishers = await _publisherService.GetAllPublishersAsync();
             return Ok(publishers);
         }
 
@@ -28,7 +28,7 @@ namespace BookstoreApplication.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOne(int id)
         {
-            var publisher = await _publisherRepository.GetOnePublisherAsync(id);
+            var publisher = await _publisherService.GetPublisherByIdAsync(id);
             if (publisher == null)
                 return NotFound();
 
@@ -39,7 +39,7 @@ namespace BookstoreApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Publisher publisher)
         {
-            var createdPublisher = await _publisherRepository.AddPublisherAsync(publisher);
+            var createdPublisher = await _publisherService.CreatePublisherAsync(publisher);
             return Ok(createdPublisher);
         }
 
@@ -48,13 +48,13 @@ namespace BookstoreApplication.Controllers
         public async Task<IActionResult> Put(int id, Publisher publisher)
         {
             if (id != publisher.Id)
-                return BadRequest("Publisher ID mismatch.");
+                return BadRequest();
 
-            var existingPublisher = await _publisherRepository.GetOnePublisherAsync(id);
+            var existingPublisher = await _publisherService.GetPublisherByIdAsync(id);
             if (existingPublisher == null)
                 return NotFound();
 
-            var updatedPublisher = await _publisherRepository.UpdatePublisherAsync(publisher);
+            var updatedPublisher = await _publisherService.UpdatePublisherAsync(publisher);
             return Ok(updatedPublisher);
         }
 
@@ -62,11 +62,11 @@ namespace BookstoreApplication.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var publisher = await _publisherRepository.GetOnePublisherAsync(id);
+            var publisher = await _publisherService.GetPublisherByIdAsync(id);
             if (publisher == null)
                 return NotFound();
 
-            await _publisherRepository.DeletePublisherAsync(id);
+            await _publisherService.DeletePublisherAsync(id);
             return NoContent();
         }
     }

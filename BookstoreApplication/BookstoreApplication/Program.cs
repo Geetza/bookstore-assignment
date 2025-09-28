@@ -1,5 +1,6 @@
 using BookstoreApplication.Models;
 using BookstoreApplication.Repositories;
+using BookstoreApplication.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<AuthorRepository>();
 builder.Services.AddScoped<PublisherRepository>();
+builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<AuthorService>();
+builder.Services.AddScoped<PublisherService>();
 
 
 var app = builder.Build();

@@ -38,6 +38,12 @@ namespace BookstoreApplication.Models
                 .HasColumnName("BirthDay");
 
             modelBuilder.Entity<Book>()
+                .HasOne(b => b.Author)
+                .WithMany()
+                .HasForeignKey(b => b.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Book>()
                 .HasOne(b => b.Publisher)
                 .WithMany()
                 .HasForeignKey(b => b.PublisherId)
