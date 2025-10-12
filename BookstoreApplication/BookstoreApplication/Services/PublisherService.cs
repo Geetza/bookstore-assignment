@@ -31,14 +31,22 @@ namespace BookstoreApplication.Services
         }
 
         // UPDATE
-        public async Task<Publisher> UpdatePublisherAsync(Publisher publisher)
+        public async Task<Publisher?> UpdatePublisherAsync(Publisher publisher)
         {
+            var existingPublisher = await _publisherRepository.GetOnePublisherAsync(publisher.Id);
+            if (existingPublisher == null)
+                return null;
+
             return await _publisherRepository.UpdatePublisherAsync(publisher);
         }
 
         // DELETE
         public async Task<bool> DeletePublisherAsync(int id)
         {
+            var existing = await _publisherRepository.GetOnePublisherAsync(id);
+            if (existing == null) 
+                return false;
+
             return await _publisherRepository.DeletePublisherAsync(id);
         }
     }

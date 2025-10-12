@@ -59,6 +59,10 @@ namespace BookstoreApplication.Services
 
         public async Task<bool> DeleteBookAsync(int id)
         {
+            var existingBook = await _bookRepository.GetOneBookAsync(id);
+            if (existingBook == null)
+                return false;
+
             return await _bookRepository.DeleteBookAsync(id);
         }
     }

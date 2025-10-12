@@ -50,11 +50,11 @@ namespace BookstoreApplication.Controllers
             if (id != publisher.Id)
                 return BadRequest();
 
-            var existingPublisher = await _publisherService.GetPublisherByIdAsync(id);
-            if (existingPublisher == null)
-                return NotFound();
-
             var updatedPublisher = await _publisherService.UpdatePublisherAsync(publisher);
+            if (updatedPublisher == null)
+            {
+                return NotFound();
+            }
             return Ok(updatedPublisher);
         }
 
@@ -62,11 +62,10 @@ namespace BookstoreApplication.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var publisher = await _publisherService.GetPublisherByIdAsync(id);
-            if (publisher == null)
+            var existing = await _publisherService.DeletePublisherAsync(id);
+            if (!existing)
                 return NotFound();
 
-            await _publisherService.DeletePublisherAsync(id);
             return NoContent();
         }
     }

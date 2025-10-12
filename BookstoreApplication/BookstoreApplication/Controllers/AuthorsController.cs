@@ -53,13 +53,11 @@ namespace BookstoreApplication.Controllers
                 return BadRequest();
             }
 
-            var existingAuthor = await _authorService.GetAuthorByIdAsync(id);
-            if (existingAuthor == null)
+            var updatedAuthor = await _authorService.UpdateAuthorAsync(author);
+            if (updatedAuthor == null)
             {
                 return NotFound();
             }
-
-            var updatedAuthor = await _authorService.UpdateAuthorAsync(author);
             return Ok(updatedAuthor);
         }
 
@@ -67,13 +65,11 @@ namespace BookstoreApplication.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var author = await _authorService.GetAuthorByIdAsync(id);
-            if (author == null)
+            var success = await _authorService.DeleteAuthorAsync(id);
+            if (!success)
             {
                 return NotFound();
             }
-
-            await _authorService.DeleteAuthorAsync(id);
 
             return NoContent();
         }
