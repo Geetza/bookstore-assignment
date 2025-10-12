@@ -1,9 +1,10 @@
 ﻿using BookstoreApplication.Models;
+using BookstoreApplication.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreApplication.Repositories
 {
-    public class BookRepository
+    public class BookRepository : IBookRepository
     {
         private AppDbContext _context;
 
@@ -62,7 +63,7 @@ namespace BookstoreApplication.Repositories
         // DELETE
         public async Task<bool> DeleteBookAsync(int id)
         {
-            Book? book = await _context.Books.FindAsync(id);
+            var book = await _context.Books.FindAsync(id);
             if (book == null)
             {
                 return false;

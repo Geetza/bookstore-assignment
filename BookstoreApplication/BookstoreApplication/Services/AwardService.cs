@@ -1,13 +1,14 @@
 ﻿using BookstoreApplication.Models;
-using BookstoreApplication.Repositories;
+using BookstoreApplication.Repositories.IRepositories;
+using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
 {
-    public class AwardService
+    public class AwardService : IAwardService
     {
-        private readonly AwardRepository _awardRepository;
+        private readonly IAwardRepository _awardRepository;
 
-        public AwardService(AwardRepository awardRepository)
+        public AwardService(IAwardRepository awardRepository)
         {
             _awardRepository = awardRepository;
         }

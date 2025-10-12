@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
-using BookstoreApplication.Models;
-using BookstoreApplication.Services;
+﻿using BookstoreApplication.Models;
+using BookstoreApplication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreApplication.Controllers
@@ -9,9 +8,9 @@ namespace BookstoreApplication.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookService _bookService;
+        private readonly IBookService _bookService;
 
-        public BooksController(BookService bookService)
+        public BooksController(IBookService bookService)
         {
             _bookService = bookService;
         }
@@ -51,7 +50,7 @@ namespace BookstoreApplication.Controllers
 
             var updatedBook = await _bookService.UpdateBookAsync(book);
             if (updatedBook == null)
-                return BadRequest();
+                return NotFound();
 
             return Ok(updatedBook);
         }
@@ -59,11 +58,10 @@ namespace BookstoreApplication.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
-            if (book == null)
+            var success = await _bookService.DeleteBookAsync(id);
+            if (!success)
                 return NotFound();
 
-            await _bookService.DeleteBookAsync(id);
             return NoContent();
         }
     }

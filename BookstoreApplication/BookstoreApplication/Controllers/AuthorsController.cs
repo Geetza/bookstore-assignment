@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
-using BookstoreApplication.Models;
-using BookstoreApplication.Services;
+﻿using BookstoreApplication.Models;
+using BookstoreApplication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookstoreApplication.Controllers
@@ -9,9 +8,9 @@ namespace BookstoreApplication.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
-        private readonly AuthorService _authorService;
+        private readonly IAuthorService _authorService;
 
-        public AuthorsController(AuthorService authorService)
+        public AuthorsController(IAuthorService authorService)
         {
             _authorService = authorService;
         }

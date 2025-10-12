@@ -1,13 +1,14 @@
 ﻿using BookstoreApplication.Models;
-using BookstoreApplication.Repositories;
+using BookstoreApplication.Repositories.IRepositories;
+using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
 {
-    public class AuthorService
+    public class AuthorService : IAuthorService
     {
-        private readonly AuthorRepository _authorRepository;
+        private readonly IAuthorRepository _authorRepository;
 
-        public AuthorService(AuthorRepository authorRepository)
+        public AuthorService(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
         }
@@ -31,14 +32,23 @@ namespace BookstoreApplication.Services
         }
 
         // UPDATE
-        public async Task<Author> UpdateAuthorAsync(Author author)
+        public async Task<Author?> UpdateAuthorAsync(Author author)
         {
+            var existingAuthor = await _authorRepository.GetOneAuthorAsync(author.Id);
+            if (existingAuthor == null)
+            {
+                return null;
+            }
             return await _authorRepository.UpdateAuthorAsync(author);
         }
 
         // DELETE
         public async Task<bool> DeleteAuthorAsync(int id)
         {
+            var existing = await _authorRepository.GetOneAuthorAsync(id);
+            if (existing == null)
+                return false;
+
             return await _authorRepository.DeleteAuthorAsync(id);
         }
     }
