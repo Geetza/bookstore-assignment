@@ -1,6 +1,6 @@
-using BookstoreApplication.Models;
+using BookstoreApplication.Domain;
+using BookstoreApplication.Domain.IRepositories;
 using BookstoreApplication.Repositories;
-using BookstoreApplication.Repositories.IRepositories;
 using BookstoreApplication.Services;
 using BookstoreApplication.Services.IServices;
 using Microsoft.EntityFrameworkCore;

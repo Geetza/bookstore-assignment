@@ -1,5 +1,5 @@
-﻿using BookstoreApplication.Models;
-using BookstoreApplication.Repositories.IRepositories;
+﻿using BookstoreApplication.Domain;
+using BookstoreApplication.Domain.IRepositories;
 using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
@@ -35,6 +35,9 @@ namespace BookstoreApplication.Services
             var publisher = await _publisherService.GetPublisherByIdAsync(book.PublisherId);
             if (publisher == null) return null;
 
+            // **Ovo rešava problem sa PostgreSQL timestamp with time zone**
+            book.PublishedDate = DateTime.SpecifyKind(book.PublishedDate, DateTimeKind.Utc);
+
             book.Author = author;
             book.Publisher = publisher;
 
@@ -51,6 +54,9 @@ namespace BookstoreApplication.Services
 
             var publisher = await _publisherService.GetPublisherByIdAsync(book.PublisherId);
             if (publisher == null) return null;
+
+            // **Ovo rešava problem sa PostgreSQL timestamp with time zone**
+            book.PublishedDate = DateTime.SpecifyKind(book.PublishedDate, DateTimeKind.Utc);
 
             book.Author = author;
             book.Publisher = publisher;

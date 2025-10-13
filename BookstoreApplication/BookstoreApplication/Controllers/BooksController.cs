@@ -1,4 +1,4 @@
-﻿using BookstoreApplication.Models;
+﻿using BookstoreApplication.Domain;
 using BookstoreApplication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,9 +45,6 @@ namespace BookstoreApplication.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Book book)
         {
-            if (id != book.Id)
-                return BadRequest();
-
             var updatedBook = await _bookService.UpdateBookAsync(book);
             if (updatedBook == null)
                 return NotFound();

@@ -1,6 +1,6 @@
-﻿using BookstoreApplication.Models;
+﻿using BookstoreApplication.Domain;
 
-namespace BookstoreApplication.Repositories.IRepositories
+namespace BookstoreApplication.Domain.IRepositories
 {
     public interface IBookRepository
     {

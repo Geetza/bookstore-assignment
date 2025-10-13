@@ -1,4 +1,4 @@
-﻿using BookstoreApplication.Models;
+﻿using BookstoreApplication.Domain;
 
 namespace BookstoreApplication.Services.IServices
 {

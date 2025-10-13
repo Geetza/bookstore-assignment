@@ -1,5 +1,5 @@
-﻿using BookstoreApplication.Models;
-using BookstoreApplication.Repositories.IRepositories;
+﻿using BookstoreApplication.Domain;
+using BookstoreApplication.Domain.IRepositories;
 using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
