@@ -7,7 +7,7 @@ namespace BookstoreApplication.Services.IServices
         Task<List<Publisher>> GetAllPublishersAsync();
         Task<Publisher?> GetPublisherByIdAsync(int id);
         Task<Publisher> CreatePublisherAsync(Publisher publisher);
-        Task<Publisher?> UpdatePublisherAsync(Publisher publisher);
+        Task<Publisher?> UpdatePublisherAsync(int id, Publisher publisher);
         Task<bool> DeletePublisherAsync(int id);
     }
 }

@@ -45,11 +45,6 @@ namespace BookstoreApplication.Repositories
         public async Task<bool> DeletePublisherAsync(int id)
         {
             var publisher = await _context.Publishers.FindAsync(id);
-            if (publisher == null)
-            {
-                return false;
-            }
-
             _context.Publishers.Remove(publisher);
             await _context.SaveChangesAsync();
             return true;

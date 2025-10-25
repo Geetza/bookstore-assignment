@@ -1,5 +1,6 @@
 ﻿using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using BookstoreApplication.Exceptions;
 using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
@@ -7,7 +8,7 @@ namespace BookstoreApplication.Services
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
-
+        // UPDATE DELETE I GETONE
         public AuthorService(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
@@ -22,7 +23,11 @@ namespace BookstoreApplication.Services
         // GET ONE
         public async Task<Author?> GetAuthorByIdAsync(int id)
         {
-            return await _authorRepository.GetOneAuthorAsync(id);
+            
+            var author = await _authorRepository.GetOneAuthorAsync(id);
+            if (author == null)
+                throw new NotFoundException(id);
+            return author;
         }
 
         // ADD
@@ -32,14 +37,22 @@ namespace BookstoreApplication.Services
         }
 
         // UPDATE
-        public async Task<Author?> UpdateAuthorAsync(Author author)
+        public async Task<Author?> UpdateAuthorAsync(int id, Author author)
         {
-            var existingAuthor = await _authorRepository.GetOneAuthorAsync(author.Id);
+            if (id != author.Id)
+                throw new BadRequestException("Id value is invalid");
+            var existingAuthor = await _authorRepository.GetOneAuthorAsync(id);
             if (existingAuthor == null)
             {
-                return null;
+                throw new NotFoundException(id);
             }
-            return await _authorRepository.UpdateAuthorAsync(author);
+
+            existingAuthor.FullName = author.FullName;
+            existingAuthor.DateOfBirth = author.DateOfBirth;
+            existingAuthor.Biography = author.Biography;
+            existingAuthor.AuthorAwards = author.AuthorAwards;
+
+            return await _authorRepository.UpdateAuthorAsync(existingAuthor);
         }
 
         // DELETE
@@ -47,8 +60,7 @@ namespace BookstoreApplication.Services
         {
             var existing = await _authorRepository.GetOneAuthorAsync(id);
             if (existing == null)
-                return false;
-
+                throw new NotFoundException(id);
             return await _authorRepository.DeleteAuthorAsync(id);
         }
     }

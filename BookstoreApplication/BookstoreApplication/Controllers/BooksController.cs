@@ -17,49 +17,33 @@ namespace BookstoreApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BookDto>> GetAll()
+        public async Task<ActionResult<List<BookDto>>> GetAll()
         {
-            var books = await _bookService.GetAllBooksAsync();
-            return Ok(books);
+            return Ok(await _bookService.GetAllBooksAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDetailsDto>> GetOne(int id)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
-            if (book == null)
-                return NotFound();
-
-            return Ok(book);
+            return Ok(await _bookService.GetBookByIdAsync(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(Book book)
         {
-            var createdBook = await _bookService.CreateBookAsync(book);
-            if (createdBook == null)
-                return BadRequest();
-
-            return Ok(createdBook);
+            return Ok(await _bookService.CreateBookAsync(book));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Book book)
         {
-            var updatedBook = await _bookService.UpdateBookAsync(book);
-            if (updatedBook == null)
-                return NotFound();
-
-            return Ok(updatedBook);
+            return Ok(await _bookService.UpdateBookAsync(id, book));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _bookService.DeleteBookAsync(id);
-            if (!success)
-                return NotFound();
-
+            await _bookService.DeleteBookAsync(id);
             return NoContent();
         }
     }

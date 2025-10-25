@@ -6,9 +6,9 @@ namespace BookstoreApplication.Services.IServices
     {
         Task<List<Award>> GetAllAsync();
         Task<Award?> GetAwardByIdAsync(int id);
-        Task<Award> CreateAuthorAsync(Award award);
-        Task<Award> UpdateAuthorAsync(Award award);
-        Task<bool> DeleteAuthorAsync(int id);
+        Task<Award> CreateAwardAsync(Award award);
+        Task<Award> UpdateAwardAsync(int id, Award award);
+        Task<bool> DeleteAwardAsync(int id);
 
     }
 }

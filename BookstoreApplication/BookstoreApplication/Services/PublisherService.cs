@@ -1,5 +1,6 @@
 ﻿using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using BookstoreApplication.Exceptions;
 using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
@@ -22,7 +23,10 @@ namespace BookstoreApplication.Services
         // GET ONE
         public async Task<Publisher?> GetPublisherByIdAsync(int id)
         {
-            return await _publisherRepository.GetOnePublisherAsync(id);
+            var publisher = await _publisherRepository.GetOnePublisherAsync(id);
+            if (publisher == null)
+                throw new NotFoundException(id);
+            return publisher;
         }
 
         // ADD
@@ -32,21 +36,29 @@ namespace BookstoreApplication.Services
         }
 
         // UPDATE
-        public async Task<Publisher?> UpdatePublisherAsync(Publisher publisher)
+        public async Task<Publisher?> UpdatePublisherAsync(int id, Publisher publisher)
         {
-            var existingPublisher = await _publisherRepository.GetOnePublisherAsync(publisher.Id);
-            if (existingPublisher == null)
-                return null;
+            if (id != publisher.Id)
+                throw new BadRequestException("Invalid Id");
 
-            return await _publisherRepository.UpdatePublisherAsync(publisher);
+            var existingPublisher = await _publisherRepository.GetOnePublisherAsync(id);
+
+            if (existingPublisher == null)
+                throw new NotFoundException(id);
+
+            existingPublisher.Name = publisher.Name;
+            existingPublisher.Address = publisher.Address;
+            existingPublisher.Website = publisher.Website;
+
+            return await _publisherRepository.UpdatePublisherAsync(existingPublisher);
         }
 
         // DELETE
         public async Task<bool> DeletePublisherAsync(int id)
         {
             var existing = await _publisherRepository.GetOnePublisherAsync(id);
-            if (existing == null) 
-                return false;
+            if (existing == null)
+                throw new NotFoundException(id);
 
             return await _publisherRepository.DeletePublisherAsync(id);
         }

@@ -19,39 +19,35 @@ namespace BookstoreApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var authors = await _authorService.GetAllAuthorsAsync();
-            return Ok(authors);
+            return Ok(await _authorService.GetAllAuthorsAsync());
         }
 
         // GET api/authors/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOne(int id)
         {
-            var author = await _authorService.GetAuthorByIdAsync(id);
-            return Ok(author);
+            return Ok(await _authorService.GetAuthorByIdAsync(id));
         }
 
         // POST api/authors
         [HttpPost]
         public async Task<IActionResult> Post(Author author)
         {
-            var createdAuthor = await _authorService.CreateAuthorAsync(author);
-            return Ok(createdAuthor);
+            return Ok(await _authorService.CreateAuthorAsync(author));
         }
 
         // PUT api/authors/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Author author)
         {
-            var updatedAuthor = await _authorService.UpdateAuthorAsync(author);
-            return Ok(updatedAuthor);
+            return Ok(await _authorService.UpdateAuthorAsync(id, author));
         }
 
         // DELETE api/authors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _authorService.DeleteAuthorAsync(id);
+            await _authorService.DeleteAuthorAsync(id);
             return NoContent();
         }
     }
