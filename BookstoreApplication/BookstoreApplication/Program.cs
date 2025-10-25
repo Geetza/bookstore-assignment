@@ -5,6 +5,7 @@ using BookstoreApplication.Services;
 using BookstoreApplication.Services.IServices;
 using BookstoreApplication.Settings;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,13 @@ builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<MappingProfile>();
 });
 
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddSerilog(logger);
 
 
 var app = builder.Build();
