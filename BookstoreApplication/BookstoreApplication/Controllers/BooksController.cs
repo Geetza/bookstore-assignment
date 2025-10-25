@@ -1,4 +1,5 @@
 ﻿using BookstoreApplication.Domain;
+using BookstoreApplication.DTOs.Response;
 using BookstoreApplication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +17,14 @@ namespace BookstoreApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<BookDto>> GetAll()
         {
             var books = await _bookService.GetAllBooksAsync();
             return Ok(books);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOne(int id)
+        public async Task<ActionResult<BookDetailsDto>> GetOne(int id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)

@@ -45,11 +45,6 @@ namespace BookstoreApplication.Repositories
         public async Task<bool> DeleteAuthorAsync(int id)
         {
             var author = await _context.Authors.FindAsync(id);
-            if (author == null)
-            {
-                return false;
-            }
-
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
             return true;

@@ -1,5 +1,7 @@
-﻿using BookstoreApplication.Domain;
+﻿using AutoMapper;
+using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using BookstoreApplication.DTOs.Response;
 using BookstoreApplication.Services.IServices;
 
 namespace BookstoreApplication.Services
@@ -9,22 +11,26 @@ namespace BookstoreApplication.Services
         private readonly IBookRepository _bookRepository;
         private readonly IAuthorService _authorService;
         private readonly IPublisherService _publisherService;
+        private readonly IMapper _mapper;
 
-        public BookService(IBookRepository bookRepository, IAuthorService authorService, IPublisherService publisherService)
+        public BookService(IBookRepository bookRepository, IAuthorService authorService, IPublisherService publisherService, IMapper mapper)
         {
             _bookRepository = bookRepository;
             _authorService = authorService;
             _publisherService = publisherService;
+            _mapper = mapper;
         }
 
-        public async Task<List<Book>> GetAllBooksAsync()
+        public async Task<List<BookDto>> GetAllBooksAsync()
         {
-            return await _bookRepository.GetAllBooksAsync();
+            var books = await _bookRepository.GetAllBooksAsync();
+            return _mapper.Map<List<BookDto>>(books).ToList();
         }
 
-        public async Task<Book?> GetBookByIdAsync(int id)
+        public async Task<BookDetailsDto?> GetBookByIdAsync(int id)
         {
-            return await _bookRepository.GetOneBookAsync(id);
+            var book = await _bookRepository.GetOneBookAsync(id);
+            return _mapper.Map<BookDetailsDto?>(book);
         }
 
         public async Task<Book?> CreateBookAsync(Book book)

@@ -3,6 +3,7 @@ using BookstoreApplication.Domain.IRepositories;
 using BookstoreApplication.Repositories;
 using BookstoreApplication.Services;
 using BookstoreApplication.Services.IServices;
+using BookstoreApplication.Settings;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,11 @@ builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
+
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<MappingProfile>();
+});
+
 
 
 var app = builder.Build();

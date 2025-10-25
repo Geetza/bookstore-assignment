@@ -28,9 +28,6 @@ namespace BookstoreApplication.Controllers
         public async Task<IActionResult> GetOne(int id)
         {
             var publisher = await _publisherService.GetPublisherByIdAsync(id);
-            if (publisher == null)
-                return NotFound();
-
             return Ok(publisher);
         }
 
@@ -47,10 +44,6 @@ namespace BookstoreApplication.Controllers
         public async Task<IActionResult> Put(int id, Publisher publisher)
         {
             var updatedPublisher = await _publisherService.UpdatePublisherAsync(publisher);
-            if (updatedPublisher == null)
-            {
-                return NotFound();
-            }
             return Ok(updatedPublisher);
         }
 
@@ -59,9 +52,6 @@ namespace BookstoreApplication.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var existing = await _publisherService.DeletePublisherAsync(id);
-            if (!existing)
-                return NotFound();
-
             return NoContent();
         }
     }

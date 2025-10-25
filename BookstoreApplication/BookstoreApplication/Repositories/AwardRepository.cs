@@ -45,11 +45,6 @@ namespace BookstoreApplication.Repositories
         public async Task<bool> DeleteAwardAsync(int id)
         {
             var award = await _context.Awards.FindAsync(id);
-            if (award == null)
-            {
-                return false;
-            }
-
             _context.Awards.Remove(award);
             await _context.SaveChangesAsync();
             return true;
