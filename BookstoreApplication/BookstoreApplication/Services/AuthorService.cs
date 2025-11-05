@@ -8,7 +8,7 @@ namespace BookstoreApplication.Services
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
-        // UPDATE DELETE I GETONE
+        
         public AuthorService(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;

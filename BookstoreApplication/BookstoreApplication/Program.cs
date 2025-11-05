@@ -4,6 +4,7 @@ using BookstoreApplication.Repositories;
 using BookstoreApplication.Services;
 using BookstoreApplication.Services.IServices;
 using BookstoreApplication.Settings;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -29,6 +30,19 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = true;          // Mora imati bar jednu cifru
+    options.Password.RequireLowercase = true;      // Bar jedno malo slovo
+    options.Password.RequireUppercase = true;      // Bar jedno veliko slovo
+    options.Password.RequireNonAlphanumeric = true;// Bar jedan specijalni karakter
+    options.Password.RequiredLength = 8;           // Minimum 8 karaktera
+});
+
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
@@ -36,6 +50,8 @@ builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<MappingProfile>();
@@ -48,6 +64,7 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddSerilog(logger);
+builder.Services.AddAuthentication();
 
 
 var app = builder.Build();
@@ -61,6 +78,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseCors();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
