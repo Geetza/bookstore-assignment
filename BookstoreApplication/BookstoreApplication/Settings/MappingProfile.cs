@@ -19,6 +19,10 @@ namespace BookstoreApplication.Settings
                 .ForMember (dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.Name));
 
             CreateMap<RegistrationDto, ApplicationUser>();
+
+            CreateMap<ApplicationUser, ProfileDto>()
+                .ForMember(
+                    dest => dest.Fullname, opt => opt.MapFrom(src => $"{src.Name} {src.Surname}"));
         }
     }
 }
