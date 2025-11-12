@@ -17,9 +17,9 @@ namespace BookstoreApplication.Controllers
 
         // GET: api/authors
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, int pageSize = 5)
         {
-            return Ok(await _authorService.GetAllAuthorsAsync());
+            return Ok(await _authorService.GetPagedAuthorsAsync(page, pageSize));
         }
 
         // GET api/authors/5

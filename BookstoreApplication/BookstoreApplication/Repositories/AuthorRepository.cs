@@ -1,5 +1,6 @@
 ﻿using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreApplication.Repositories
@@ -14,9 +15,9 @@ namespace BookstoreApplication.Repositories
         }
 
         // GET ALL
-        public async Task<List<Author>> GetAllAuthorsAsync()
+        public IQueryable<Author> GetAllAuthors()
         {
-            return await _context.Authors.ToListAsync();
+            return _context.Authors.AsQueryable();
         }
 
         // GET ONE

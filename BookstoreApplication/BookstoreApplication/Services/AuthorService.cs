@@ -1,24 +1,43 @@
-﻿using BookstoreApplication.Domain;
+﻿using AutoMapper;
+using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using BookstoreApplication.DTOs.Response;
 using BookstoreApplication.Exceptions;
+using BookstoreApplication.Repositories;
 using BookstoreApplication.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreApplication.Services
 {
     public class AuthorService : IAuthorService
     {
         private readonly IAuthorRepository _authorRepository;
-        
+
         public AuthorService(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
         }
 
         // GET ALL
-        public async Task<List<Author>> GetAllAuthorsAsync()
+        public async Task<PaginatedResultDto<AuthorDto>> GetPagedAuthorsAsync(int page, int pageSize)
         {
-            return await _authorRepository.GetAllAuthorsAsync();
+            var query = _authorRepository.GetAllAuthors();
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(author => new AuthorDto
+                {
+                    FullName = author.FullName,
+                    Biography = author.Biography,
+                    DateOfBirth = author.DateOfBirth
+                })
+                .ToListAsync();
+
+            return new PaginatedResultDto<AuthorDto>(items, totalCount, page, pageSize);
         }
+
 
         // GET ONE
         public async Task<Author?> GetAuthorByIdAsync(int id)
