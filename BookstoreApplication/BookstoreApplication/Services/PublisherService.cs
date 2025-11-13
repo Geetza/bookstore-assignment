@@ -1,7 +1,9 @@
 ﻿using BookstoreApplication.Domain;
 using BookstoreApplication.Domain.IRepositories;
+using BookstoreApplication.DTOs.Response;
 using BookstoreApplication.Exceptions;
 using BookstoreApplication.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookstoreApplication.Services
 {
@@ -19,6 +21,34 @@ namespace BookstoreApplication.Services
         {
             return await _publisherRepository.GetAllPublishersAsync();
         }
+
+        // GET ALL SORTED
+        public async Task<SortedResultDto<PublisherDto>> GetSortedPublishersAsync(string sortBy = "Name", string sortDirection = "asc")
+        {
+            var query = _publisherRepository.GetAllPublishers();
+
+            // Sort
+            query = sortBy switch
+            {
+                "Name" => sortDirection == "asc" ? query.OrderBy(publisher => publisher.Name) : query.OrderByDescending(publisher => publisher.Name),
+                "Address" => sortDirection == "asc" ? query.OrderBy(publisher => publisher.Address) : query.OrderByDescending(publisher => publisher.Address),
+                _ => query.OrderBy(publisher => publisher.Name)
+            };
+
+            // To Dto
+            var items = await query
+                .Select(publisher => new PublisherDto
+                {
+                    Name = publisher.Name,
+                    Address = publisher.Address,
+                    Website = publisher.Website
+                })
+                .ToListAsync();
+
+            // Return sorted
+            return new SortedResultDto<PublisherDto>(items, sortBy, sortDirection);
+        }
+
 
         // GET ONE
         public async Task<Publisher?> GetPublisherByIdAsync(int id)

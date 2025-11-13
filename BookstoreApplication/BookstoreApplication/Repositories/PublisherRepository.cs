@@ -19,6 +19,12 @@ namespace BookstoreApplication.Repositories
             return await _context.Publishers.ToListAsync();
         }
 
+        // GET ALL SORTED
+        public IQueryable<Publisher> GetAllPublishers()
+        {
+            return _context.Publishers.AsQueryable();
+        }
+
         // GET ONE
         public async Task<Publisher?> GetOnePublisherAsync(int id)
         {
